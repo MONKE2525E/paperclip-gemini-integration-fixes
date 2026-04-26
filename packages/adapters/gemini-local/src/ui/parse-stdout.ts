@@ -66,8 +66,8 @@ function parseAssistantMessage(messageRaw: unknown, ts: string): TranscriptEntry
     if (!part) continue;
 
     const type = asString(part.type);
-    if (type === "output_text" || type === "text") {
-      const text = asString(part.text).trim();
+    if (type === "output_text" || type === "text" || type === "content") {
+      const text = (asString(part.text) || asString(part.content)).trim();
       if (text) entries.push({ kind: "assistant", ts, text });
     } else if (type === "thought" || type === "thinking") {
       const text = asString(part.text).trim();
@@ -125,7 +125,7 @@ function collectTextEntries(messageRaw: unknown, ts: string, kind: "user" | "ass
       : [];
   for (const partRaw of content) {
     const part = asRecord(partRaw);
-    const text = asString(part?.text).trim();
+    const text = (asString(part?.text) || asString(part?.content)).trim();
     if (text) entries.push({ kind, ts, text });
   }
 
@@ -223,7 +223,7 @@ export function parseGeminiStdoutLine(line: string, ts: string): TranscriptEntry
     if (role === "user") {
       return collectTextEntries(parsed, ts, "user");
     }
-    return []; // Suppress recognized role
+    return []; // Suppress unrecognized role
   }
 
   if (type === "tool_use") {
@@ -306,3 +306,4 @@ export function parseGeminiStdoutLine(line: string, ts: string): TranscriptEntry
 
   return [{ kind: "stdout", ts, text: line }];
 }
+
