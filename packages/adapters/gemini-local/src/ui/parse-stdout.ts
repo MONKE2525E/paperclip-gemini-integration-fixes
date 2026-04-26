@@ -43,6 +43,10 @@ function errorText(value: unknown): string {
 }
 
 function parseAssistantMessage(messageRaw: unknown, ts: string): TranscriptEntry[] {
+  if (typeof messageRaw === "string") {
+    const text = messageRaw.trim();
+    return text ? [{ kind: "assistant", ts, text }] : [];
+  }
   const message = asRecord(messageRaw);
   if (!message) return [];
 
@@ -103,6 +107,10 @@ function parseAssistantMessage(messageRaw: unknown, ts: string): TranscriptEntry
 }
 
 function collectTextEntries(messageRaw: unknown, ts: string, kind: "user" | "assistant"): TranscriptEntry[] {
+  if (typeof messageRaw === "string") {
+    const text = messageRaw.trim();
+    return text ? [{ kind, ts, text }] : [];
+  }
   const message = asRecord(messageRaw);
   if (!message) return [];
 
