@@ -1,0 +1,8 @@
+fix: finalize parser fixes for legacy and modern CLI formats
+
+- Restored string fallback guards for legacy string-based message fields in UI parser.
+- Symmetrically handled `type === "content"` and `part.content` fallback in UI parser.
+- Ensured `question` parts are detected in the modern `type === "message"` server-side handler.
+- Fixed misleading "recognized role" comment in UI parser.
+
+Co-authored-by: gemini-code-assist <gemini-code-assist@users.noreply.github.com>
